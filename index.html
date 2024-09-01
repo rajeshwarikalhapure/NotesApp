@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        .todo-item {
+            border: 2px solid black;
+            padding: 5px;
+            margin: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 7px;
+            height: 30px;
+        }
+
+        .btn {
+            background-color: rgb(246, 47, 87);
+            color: white;
+            border: none;
+            border-radius: 10%;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>ToDoApp</h1>
+    <div id="display" class="display"></div>
+    <input type="text" id="task-inp">
+    <button onclick="taskinput()"> add</button>
+
+
+
+
+    <script>
+        let todo = [];
+        let display = document.getElementById("display");
+
+        function loadFromLocalStorage() {
+            const allTasks = JSON.parse(localStorage.getItem('localtodo'))
+            if (allTasks)
+                todo.push(...allTasks)
+        }
+        loadFromLocalStorage()
+
+        function loadTasks() {
+            localStorage.setItem('localtodo', JSON.stringify(todo))
+
+            display.innerHTML = '';
+            for (let to of todo) {
+                display.innerHTML += `
+                    <div class="todo-item">${to}
+                        <button class="btn" onclick="deleteTask('${to}')">Remove Task</button>
+                    </div>`;
+            }
+        }
+
+        function deleteTask(to) {
+            let taskIndex = todo.indexOf(to);
+            if (taskIndex > -1) {
+                todo.splice(taskIndex, 1);
+                loadTasks();
+            }
+        }
+
+        loadTasks();
+        function taskinput() {
+            const input = document.getElementById('task-inp')
+            const inputvalue = document.getElementById('task-inp').value
+            if (!inputvalue) {
+                alert('please enter value')
+                return;
+            }
+            todo.push(inputvalue)
+            loadTasks()
+            input.value = ''
+
+        }
+
+    </script>
+</body>
+
+</html>
